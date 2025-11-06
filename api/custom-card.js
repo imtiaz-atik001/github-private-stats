@@ -65,7 +65,7 @@ export default async function handler(req, res) {
       </style>
 
       <rect class="card-bg" width="440" height="190"/>
-      <text x="25" y="40" class="title">${username}'s GitHub Stats</text>
+      <text x="25" y="40" class="title">Imtiaz Atik's All GitHub Stats</text>
 
       <g transform="translate(25,70)">
         <text class="icon" y="0">⭐</text>
