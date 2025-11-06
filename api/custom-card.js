@@ -6,67 +6,99 @@ export default async function handler(req, res) {
     const response = await fetch(apiUrl);
     const stats = await response.json();
 
-    if (!stats || stats.error) {
-      throw new Error(stats?.error || "Invalid data");
-    }
+    if (!stats || stats.error) throw new Error(stats?.error || "Invalid data");
 
     const svg = `
-    <svg width="480" height="200" xmlns="http://www.w3.org/2000/svg">
+    <svg width="440" height="190" xmlns="http://www.w3.org/2000/svg">
       <style>
-        .header {
-          font: 600 20px 'Segoe UI', Ubuntu, Sans-Serif;
-          fill: #2f81f7;
+        @keyframes fadeIn {
+          0% { opacity: 0; transform: translateY(10px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .card-bg {
+          fill: #0D1117;
+          stroke: #1E2632;
+          stroke-width: 1;
+          rx: 10;
+        }
+        .title {
+          font: 600 16px 'Segoe UI', Ubuntu, sans-serif;
+          fill: #58A6FF;
         }
         .label {
-          font: 500 14px 'Segoe UI', Ubuntu, Sans-Serif;
-          fill: #6e7681;
+          font: 600 13px 'Segoe UI', Ubuntu, sans-serif;
+          fill: #C9D1D9;
+          opacity: 0.9;
+          animation: fadeIn 0.6s ease forwards;
         }
         .value {
-          font: 600 14px 'Segoe UI', Ubuntu, Sans-Serif;
-          fill: #1f2328;
+          font: 600 13px 'Segoe UI', Ubuntu, sans-serif;
+          fill: #00E6A0;
+          animation: fadeIn 0.8s ease forwards;
         }
         .icon {
-          font: 16px 'Segoe UI Emoji';
+          font: 14px 'Segoe UI Emoji';
+          animation: fadeIn 0.5s ease forwards;
+        }
+        .ring {
+          stroke: #3B82F6;
+          stroke-width: 3;
+          fill: none;
+          opacity: 0.3;
+        }
+        .rotator {
+          stroke: #00E6A0;
+          stroke-width: 3;
+          fill: none;
+          transform-origin: 340px 100px;
+          animation: spin 6s linear infinite;
+        }
+        .score {
+          font: 600 16px 'Segoe UI', Ubuntu, sans-serif;
+          fill: #00E6A0;
+          text-anchor: middle;
         }
       </style>
 
-      <!-- Card Background -->
-      <rect width="480" height="200" rx="10" fill="#ffffff" stroke="#d0d7de" stroke-width="1"/>
+      <rect class="card-bg" width="440" height="190"/>
+      <text x="25" y="40" class="title">${username}'s GitHub Stats</text>
 
-      <!-- Header -->
-      <text x="25" y="45" class="header">${username}'s GitHub Stats</text>
+      <g transform="translate(25,70)">
+        <text class="icon" y="0">⭐</text>
+        <text class="label" x="25" y="0">Total Stars Earned:</text>
+        <text class="value" x="220" y="0">${stats.stars || 0}</text>
 
-      <!-- Stats List -->
-      <g transform="translate(25, 70)">
-        <text class="icon" y="0">🏗️</text>
-        <text class="label" x="25" y="0">Total Contributions:</text>
-        <text class="value" x="220" y="0">${stats.totalContributions}</text>
+        <text class="icon" y="25">🧱</text>
+        <text class="label" x="25" y="25">Total Commits (last year):</text>
+        <text class="value" x="220" y="25">${stats.commits || 0}</text>
 
-        <text class="icon" y="30">💾</text>
-        <text class="label" x="25" y="30">Total Commits:</text>
-        <text class="value" x="220" y="30">${stats.commits}</text>
+        <text class="icon" y="50">🚀</text>
+        <text class="label" x="25" y="50">Total PRs:</text>
+        <text class="value" x="220" y="50">${stats.prs || 0}</text>
 
-        <text class="icon" y="60">🐛</text>
-        <text class="label" x="25" y="60">Issues Opened:</text>
-        <text class="value" x="220" y="60">${stats.issues}</text>
+        <text class="icon" y="75">🐛</text>
+        <text class="label" x="25" y="75">Total Issues:</text>
+        <text class="value" x="220" y="75">${stats.issues || 0}</text>
 
-        <text class="icon" y="90">🚀</text>
-        <text class="label" x="25" y="90">PRs Submitted:</text>
-        <text class="value" x="220" y="90">${stats.prs}</text>
+        <text class="icon" y="100">💬</text>
+        <text class="label" x="25" y="100">Contributed to (last year):</text>
+        <text class="value" x="220" y="100">${stats.totalContributions || 0}</text>
       </g>
 
-      <!-- Circle Summary -->
-      <circle cx="400" cy="105" r="55" stroke="#2f81f7" stroke-width="3" fill="none" opacity="0.2"/>
-      <text x="375" y="112" font-size="22" font-weight="700" fill="#2f81f7" font-family="Segoe UI, Ubuntu, Sans-Serif">
-        ${(stats.totalContributions / 1000).toFixed(1)}k
-      </text>
+      <!-- Circle Progress -->
+      <circle cx="340" cy="100" r="40" class="ring"/>
+      <circle cx="340" cy="100" r="40" class="rotator" stroke-dasharray="10 180"/>
+      <text x="340" y="106" class="score">C</text>
     </svg>
     `;
 
     res.setHeader("Content-Type", "image/svg+xml");
     res.status(200).send(svg);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 }
