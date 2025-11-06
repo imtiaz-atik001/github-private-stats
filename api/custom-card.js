@@ -11,34 +11,53 @@ export default async function handler(req, res) {
     }
 
     const svg = `
-    <svg width="480" height="210" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#00E6A0"/>
-          <stop offset="100%" stop-color="#00BFFF"/>
-        </linearGradient>
-      </defs>
-      <rect width="480" height="210" rx="20" fill="#0A0F1C"/>
-      <text x="30" y="50" fill="url(#grad)" font-size="22" font-weight="bold" font-family="Fira Code">
-        ${username}'s GitHub Stats
-      </text>
+    <svg width="480" height="200" xmlns="http://www.w3.org/2000/svg">
+      <style>
+        .header {
+          font: 600 20px 'Segoe UI', Ubuntu, Sans-Serif;
+          fill: #2f81f7;
+        }
+        .label {
+          font: 500 14px 'Segoe UI', Ubuntu, Sans-Serif;
+          fill: #6e7681;
+        }
+        .value {
+          font: 600 14px 'Segoe UI', Ubuntu, Sans-Serif;
+          fill: #1f2328;
+        }
+        .icon {
+          font: 16px 'Segoe UI Emoji';
+        }
+      </style>
 
-      <g font-family="Fira Code" font-size="16" fill="#E0E0E0">
-        <text x="30" y="90">🏗️ Total Contributions: </text>
-        <text x="300" y="90" fill="#00E6A0">${stats.totalContributions}</text>
+      <!-- Card Background -->
+      <rect width="480" height="200" rx="10" fill="#ffffff" stroke="#d0d7de" stroke-width="1"/>
 
-        <text x="30" y="120">💾 Total Commits: </text>
-        <text x="300" y="120" fill="#00E6A0">${stats.commits}</text>
+      <!-- Header -->
+      <text x="25" y="45" class="header">${username}'s GitHub Stats</text>
 
-        <text x="30" y="150">🐛 Issues Opened: </text>
-        <text x="300" y="150" fill="#00E6A0">${stats.issues}</text>
+      <!-- Stats List -->
+      <g transform="translate(25, 70)">
+        <text class="icon" y="0">🏗️</text>
+        <text class="label" x="25" y="0">Total Contributions:</text>
+        <text class="value" x="220" y="0">${stats.totalContributions}</text>
 
-        <text x="30" y="180">🚀 PRs Submitted: </text>
-        <text x="300" y="180" fill="#00E6A0">${stats.prs}</text>
+        <text class="icon" y="30">💾</text>
+        <text class="label" x="25" y="30">Total Commits:</text>
+        <text class="value" x="220" y="30">${stats.commits}</text>
+
+        <text class="icon" y="60">🐛</text>
+        <text class="label" x="25" y="60">Issues Opened:</text>
+        <text class="value" x="220" y="60">${stats.issues}</text>
+
+        <text class="icon" y="90">🚀</text>
+        <text class="label" x="25" y="90">PRs Submitted:</text>
+        <text class="value" x="220" y="90">${stats.prs}</text>
       </g>
 
-      <circle cx="400" cy="105" r="60" stroke="url(#grad)" stroke-width="4" fill="none"/>
-      <text x="370" y="115" font-size="28" fill="#00E6A0" font-family="Fira Code">
+      <!-- Circle Summary -->
+      <circle cx="400" cy="105" r="55" stroke="#2f81f7" stroke-width="3" fill="none" opacity="0.2"/>
+      <text x="375" y="112" font-size="22" font-weight="700" fill="#2f81f7" font-family="Segoe UI, Ubuntu, Sans-Serif">
         ${(stats.totalContributions / 1000).toFixed(1)}k
       </text>
     </svg>
