@@ -39,7 +39,7 @@ export default async function handler(req, res) {
 
       <circle cx="400" cy="105" r="60" stroke="url(#grad)" stroke-width="4" fill="none"/>
       <text x="370" y="115" font-size="28" fill="#00E6A0" font-family="Fira Code">
-        ${(stats.totalContributions / 100).toFixed(1)}k
+        ${(stats.totalContributions / 1000).toFixed(1)}k
       </text>
     </svg>
     `;
